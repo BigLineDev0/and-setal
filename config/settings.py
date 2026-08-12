@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     'incident',
+    'interventions',
+    'notifications',
+    'comptes',
 ]
 
 MIDDLEWARE = [
