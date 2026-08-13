@@ -2,12 +2,17 @@ from pathlib import Path
 
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
@@ -38,6 +43,9 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     'incident',
+    'interventions',
+    'notifications',
+    'comptes',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +58,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTH_USER_MODEL = 'comptes.Utilisateurs'
+DEFAULT_FROM_EMAIL = 'comptes.Utilisateurs'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
