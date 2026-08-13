@@ -85,6 +85,7 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API REST de gestion des signalements citoyens",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    'COMPONENT_SPLIT_REQUEST': True, # Forces separate schemas for uploads
 }
 
 ROOT_URLCONF = 'config.urls'
@@ -151,7 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-FR'
 
 TIME_ZONE = 'UTC'
 
@@ -165,6 +166,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
