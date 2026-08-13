@@ -15,7 +15,7 @@ def generer_et_envoyer_otp(utilisateur):
 
     # Simulation d'envoi SMS — à remplacer par un vrai fournisseur (SMS) en production
     print(
-        f"[OTP SIMULÉ] Code envoyé à {utilisateur.telephone} : {code}"
+        f"[OTP SIMULÉ] Code envoyé à {utilisateur.email} : {code}"
     )
 
     return code

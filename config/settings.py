@@ -60,6 +60,7 @@ MIDDLEWARE = [
 ]
 
 AUTH_USER_MODEL = 'comptes.Utilisateurs'
+DEFAULT_FROM_EMAIL = 'comptes.Utilisateurs'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

@@ -13,7 +13,7 @@ class Utilisateurs(AbstractUser):
         ('agent', 'Agent'),
         ('admin', 'Admin')
     ]
-
+    email = models.EmailField()
     telephone = models.CharField(max_length=20, unique=True, blank=True, null=True)
     role = models.CharField(max_length=20, choices=ROLES_CHOICES, default='citoyen')
 
