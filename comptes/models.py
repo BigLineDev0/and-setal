@@ -14,7 +14,7 @@ class Utilisateurs(AbstractUser):
         ('admin', 'Admin')
     ]
 
-    telephone = models.CharField(max_length=20, blank=True, null=True)
+    telephone = models.CharField(max_length=20, unique=True, blank=True, null=True)
     role = models.CharField(max_length=20, choices=ROLES_CHOICES, default='citoyen')
 
 
@@ -27,6 +27,7 @@ class Otp(models.Model):
     code = models.CharField(max_length=6)
     date_creation = models.DateTimeField(auto_now_add=True)
     est_utilise = models.BooleanField(default=False)
+    tentative = models.PositiveSmallIntegerField(default=0)
 
 
     def est_expire(self):
