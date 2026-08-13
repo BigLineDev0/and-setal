@@ -2,10 +2,20 @@ from .models import Otp
 
 
 def generer_et_envoyer_otp(utilisateur):
-    code = Otp.generer_code()
-    Otp.objects.create(utilisateur=utilisateur, code=code)
+    """Génère un code OTP pour un utilisateur et simule son envoi (log console)."""
 
-    # Simulation d'envoi SMS — à remplacer par Africa's Talking plus tard
-    print(f"[OTP SIMULÉ] Code envoyé à {utilisateur.telephone} : {code}")
+    # Génère un code aléatoire à 6 chiffres (méthode statique définie sur le modèle)
+    code = Otp.generer_code()
+
+    # Enregistre l'OTP en base, lié à l'utilisateur, avec date_creation auto et est_utilise=False par défaut
+    otp = Otp.objects.create(
+        utilisateur=utilisateur,
+        code=code
+    )
+
+    # Simulation d'envoi SMS — à remplacer par un vrai fournisseur (SMS) en production
+    print(
+        f"[OTP SIMULÉ] Code envoyé à {utilisateur.email} : {code}"
+    )
 
     return code
