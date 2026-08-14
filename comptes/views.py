@@ -56,6 +56,8 @@ class InscriptionView(generics.CreateAPIView):
         )
 
 class VerificationOTPViewSet(viewsets.ViewSet):
+    #  ACTION 1 : Désactive la vérification des tokens JWT pour cette route
+    authentication_classes = [] 
     permission_classes = [AllowAny]
 
     @extend_schema(
@@ -143,6 +145,8 @@ class VerificationOTPViewSet(viewsets.ViewSet):
 
 
 class RenvoiOTPViewSet(viewsets.ViewSet):
+    #  ACTION 1 : Désactive la vérification des tokens JWT pour cette route
+    authentication_classes = [] 
     permission_classes = [AllowAny]
 
     @extend_schema(
