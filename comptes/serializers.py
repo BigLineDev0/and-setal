@@ -39,7 +39,7 @@ class InscriptionSerializer(serializers.ModelSerializer):
 class VerificationOTPSerializer(serializers.Serializer):
     """Valide les données envoyées pour vérifier un code OTP reçu par SMS."""
     email = serializers.EmailField()
-    code = serializers.CharField(max_length=6, min_length=6)  # code toujours exactement 6 chiffres
+    code = serializers.CharField(max_length=4, min_length=4)  # code toujours exactement 6 chiffres
 
 
 class RenvoiOTPSerializer(serializers.Serializer):
@@ -65,3 +65,16 @@ class CreationAgentSerializer(serializers.ModelSerializer):
         model = Utilisateurs
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'telephone']
         # pas de password ici : il est généré côté serveur, pas fourni par l'admin
+
+# ---------- Gestion du profil ----------
+
+class MonProfilSerializer(serializers.ModelSerializer):
+    """
+    Même liste de champs que UtilisateursSerilizers, mais utilisé spécifiquement
+    pour /me/ : on ne passe jamais l'id d'un autre utilisateur, on modifie
+    toujours request.user.
+    """
+    class Meta:
+        model = Utilisateurs
+        fields = ['username', 'first_name', 'last_name', 'email', 'role' ,'telephone']
+        read_only_fields = ["role"]

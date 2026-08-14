@@ -11,7 +11,8 @@ from .serializers import (
     InscriptionSerializer,
     RenvoiOTPSerializer,
     ChangerRoleSerializer,
-    CreationAgentSerializer
+    CreationAgentSerializer,
+    MonProfilSerializer
 )
 from .services import generer_et_envoyer_otp
 from drf_spectacular.utils import extend_schema
@@ -269,3 +270,26 @@ class CreationAgentView(generics.CreateAPIView):
             },
             status=status.HTTP_201_CREATED
         )
+
+# ---------- Gestion du profil (/me/) ----------
+
+class MonProfilView(APIView):
+    """
+    Toujours basé sur request.user : aucun id n'est passé dans l'URL,
+    donc impossible d'accéder ou de modifier le profil d'un autre utilisateur.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = MonProfilSerializer(request.user)
+        return Response(serializer.data)
+
+    def patch(self, request):
+        serializer = MonProfilSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request):
+        request.user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

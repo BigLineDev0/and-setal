@@ -12,7 +12,7 @@ class IncidentListCreateView(generics.ListCreateAPIView):
     
     #  CORRECTION : Déplacez les parseurs ici, au niveau de la classe
     parser_classes = [MultiPartParser, FormParser] 
-    permission_classes = [AllowAny]  # ✅ autorise les non-connectés
+    permission_classes = [AllowAny]  # ✅ autorise les nonc-connectés
 
     def perform_create(self, serializer):
         # Associe l'utilisateur connecté à l'incident si authentifié

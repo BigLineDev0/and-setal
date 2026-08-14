@@ -9,6 +9,11 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IA_SERVICE_URL = os.getenv(
+    "IA_SERVICE_URL",
+    "http://127.0.0.1:8000"
+)
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
@@ -23,7 +28,7 @@ SECRET_KEY = 'django-insecure-ap&_alv%bqcndp*%=ljv#sgla^nn=8md8lfsu=vy*q_&0wyf=9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # CORS_ALLOW_ALL_ORIGINS = True
 
@@ -61,6 +66,7 @@ MIDDLEWARE = [
 
 AUTH_USER_MODEL = 'comptes.Utilisateurs'
 DEFAULT_FROM_EMAIL = 'comptes.Utilisateurs'
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
