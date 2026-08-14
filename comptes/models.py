@@ -13,14 +13,21 @@ class Utilisateurs(AbstractUser):
         ('agent', 'Agent'),
         ('admin', 'Admin')
     ]
-    email = models.EmailField()
+    
+    # L'email doit impérativement être unique pour servir d'identifiant
+    email = models.EmailField(unique=True)
+    
     telephone = models.CharField(max_length=20, unique=True, blank=True, null=True)
     role = models.CharField(max_length=20, choices=ROLES_CHOICES, default='citoyen')
 
+    # Indique à Django et SimpleJWT d'utiliser l'email pour la connexion
+    USERNAME_FIELD = 'email'
+    
+    # Champs obligatoires demandés dans le terminal lors du 'createsuperuser'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'telephone']
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.role})"
-
 
 class Otp(models.Model):
     utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
