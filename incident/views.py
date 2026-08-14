@@ -29,10 +29,13 @@ class IncidentListCreateView(generics.ListCreateAPIView):  # ListCreateAPIView e
         declencher_analyse_ia(incident)
 
 
+    def get_queryset(self):
+        return Incident.objects.filter(citoyen=self.request.user)
+
+
 class IncidentDetailView(generics.RetrieveAPIView):
-    queryset = Incident.objects.all()
+    permission_classes = [IsAuthenticated]
     serializer_class = IncidentSerializer
-    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return Incident.objects.filter(citoyen=self.request.user)
