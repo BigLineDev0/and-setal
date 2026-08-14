@@ -23,7 +23,6 @@ from django.conf import settings
 
 class UtisateursViewset(viewsets.ModelViewSet):
     """CRUD sur les utilisateurs — visibilité restreinte selon le rôle."""
-    
     queryset = Utilisateurs.objects.all()
     serializer_class = UtilisateurSerializers
     permission_classes = [IsAuthenticated]  # nécessite un token JWT valide
