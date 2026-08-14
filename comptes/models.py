@@ -6,7 +6,6 @@ from datetime import timedelta
 import random
 
 
-
 class Utilisateurs(AbstractUser):
     ROLES_CHOICES = [
         ('citoyen', 'Citoyen'),
