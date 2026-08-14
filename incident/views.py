@@ -30,7 +30,17 @@ class IncidentListCreateView(generics.ListCreateAPIView):  # ListCreateAPIView e
 
 
     def get_queryset(self):
-        return Incident.objects.filter(citoyen=self.request.user)
+        
+        queryset = Incident.objects.filter(citoyen=self.request.user)
+        statut = self.request.query_params.get('statut')
+        if statut:
+            queryset = queryset.filter(statut=statut)  
+        
+        priorite = self.request.query_params.get('priorite')  
+        if priorite:
+            queryset = queryset.filter(priorite=priorite)
+
+        return queryset
 
 
 class IncidentDetailView(generics.RetrieveAPIView):
