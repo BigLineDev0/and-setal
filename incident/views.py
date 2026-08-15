@@ -5,6 +5,7 @@ from .models import Incident
 from .serializers import IncidentSerializer
 from .services import declencher_analyse_ia  
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from comptes.permissions import EstAgentOuAdmin  # Permission personnalisée : agent ou admin uniquement
 
 class IncidentListCreateView(generics.ListCreateAPIView):  # ListCreateAPIView est une vue générique qui combine la liste et la création d'objets
     serializer_class = IncidentSerializer
@@ -49,3 +50,30 @@ class IncidentDetailView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return Incident.objects.filter(citoyen=self.request.user)
+
+
+
+class IncidentAdminListView(generics.ListAPIView):
+    # ListAPIView = vue en lecture seule (uniquement GET, pas de POST ici)
+    serializer_class = IncidentSerializer
+
+    # Seuls les utilisateurs avec le rôle 'agent' ou 'admin' peuvent accéder à cette vue
+    permission_classes = [EstAgentOuAdmin]
+
+    def get_queryset(self):
+        # Contrairement à IncidentListCreateView, on ne filtre PAS par citoyen ici :
+        # agent et admin doivent voir TOUS les incidents, pas seulement les leurs
+        queryset = Incident.objects.all()
+
+        # Filtre optionnel par statut, lu depuis l'URL (ex: ?statut=en_attente)
+        statut = self.request.query_params.get('statut')
+        if statut:
+            queryset = queryset.filter(statut=statut)
+
+        # Filtre optionnel par priorité, lu depuis l'URL (ex: ?priorite=haute)
+        priorite = self.request.query_params.get('priorite')
+        if priorite:
+            queryset = queryset.filter(priorite=priorite)
+
+        # Retourne la liste finale, filtrée ou complète selon les paramètres reçus
+        return queryset
