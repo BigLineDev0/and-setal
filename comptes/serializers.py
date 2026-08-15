@@ -13,26 +13,40 @@ class UtilisateurSerializers(serializers.ModelSerializer):
 
 
 class InscriptionSerializer(serializers.ModelSerializer):
-    """Sérialise les données d'inscription et gère la création sécurisée du compte."""
+    """Sérialise les données d'inscription par Email et gère la création sécurisée du compte."""
 
-    # write_only : le password est accepté en entrée mais jamais renvoyé dans une réponse JSON
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=True)
+    # On force l'email à être obligatoire lors du formulaire d'inscription
+    email = serializers.EmailField(required=True)
 
     class Meta:
         model = Utilisateurs
-        fields = ['id', 'username', 'first_name', 'last_name', 'password', 'telephone', 'email',]
+       
+        fields = ['id', 'first_name', 'last_name', 'password', 'telephone', 'email']
+
+    def validate_email(self, value):
+        """Vérifie si l'adresse email n'est pas déjà prise."""
+        if Utilisateurs.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Cette adresse email est déjà utilisée par un autre compte.")
+        return value
 
     def create(self, validated_data):
-        # Retire le password en clair du dict pour ne pas le passer tel quel au modèle
         password = validated_data.pop('password')
 
-        # Construit l'objet en mémoire (pas encore enregistré en base)
+        # Construit l'objet en mémoire
         utilisateur = Utilisateurs(**validated_data)
 
-        # Hash le mot de passe avant sauvegarde (jamais stocké en clair)
-        utilisateur.set_password(password)
-        utilisateur.save()
+        # Django requiert un username unique en interne, on lui synchronise l'email
+        utilisateur.username = validated_data['email']
 
+        # Hachage sécurisé du mot de passe
+        utilisateur.set_password(password)
+        
+        # Par sécurité, on force le rôle par défaut ici s'il n'est pas fourni
+        if not hasattr(utilisateur, 'role') or not utilisateur.role:
+            utilisateur.role = 'citoyen'
+
+        utilisateur.save()
         return utilisateur
 
 
