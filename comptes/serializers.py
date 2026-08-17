@@ -6,6 +6,7 @@ class UtilisateurSerializers(serializers.ModelSerializer):
     """Sérialise un profil utilisateur en lecture (ex: pour un endpoint 'mon profil')."""
 
     class Meta:
+        
         model = Utilisateurs
         fields = ['first_name', 'last_name', 'telephone', 'email', 'role']
         # 'role' est exposé mais non modifiable par l'utilisateur via ce serializer
@@ -20,6 +21,8 @@ class InscriptionSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
 
     class Meta:
+        '''Sérialise les données d'inscription et gère la création sécurisée du compte.'''
+
         model = Utilisateurs
        
         fields = ['id', 'first_name', 'last_name', 'password', 'telephone', 'email']
@@ -31,6 +34,7 @@ class InscriptionSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        # Retire le password en clair du dict pour ne pas le passer tel quel au modèle
         password = validated_data.pop('password')
 
         # Construit l'objet en mémoire
@@ -52,8 +56,9 @@ class InscriptionSerializer(serializers.ModelSerializer):
 
 class VerificationOTPSerializer(serializers.Serializer):
     """Valide les données envoyées pour vérifier un code OTP reçu par SMS."""
+
     email = serializers.EmailField()
-    code = serializers.CharField(max_length=4, min_length=4)  # code toujours exactement 6 chiffres
+    code = serializers.CharField(max_length=4, min_length=4)  # code toujours exactement 5 chiffres
 
 
 class RenvoiOTPSerializer(serializers.Serializer):
