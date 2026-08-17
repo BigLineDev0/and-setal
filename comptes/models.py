@@ -7,6 +7,8 @@ import random
 
 
 class Utilisateurs(AbstractUser):
+    '''Modèle personnalisé pour les utilisateurs avec un rôle et des informations de contact supplémentaires.'''
+
     ROLES_CHOICES = [
         ('citoyen', 'Citoyen'),
         ('agent', 'Agent'),
@@ -29,6 +31,8 @@ class Utilisateurs(AbstractUser):
         return f"{self.first_name} {self.last_name} ({self.role})"
 
 class Otp(models.Model):
+    '''Modèle pour stocker les codes OTP générés.'''
+
     utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     code = models.CharField(max_length=4)
     date_creation = models.DateTimeField(auto_now_add=True)
