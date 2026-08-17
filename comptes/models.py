@@ -23,7 +23,7 @@ class Utilisateurs(AbstractUser):
     USERNAME_FIELD = 'email'
     
     # Champs obligatoires demandés dans le terminal lors du 'createsuperuser'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'telephone']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'telephone']
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.role})"
