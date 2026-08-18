@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import generics, request
 from rest_framework.response import Response
 from rest_framework.permissions import  IsAuthenticated
 from rest_framework.views import APIView
@@ -7,6 +8,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 from incident.models import Incident
 from interventions.models import Intervention
+from comptes.permissions import EstAdmin 
 from interventions.serializers import InterventionSerializer
 from interventions.services import annuler_intervention, demarrer_intervention, terminer_intervention
 
@@ -45,3 +47,20 @@ class AnnulerInterventionView(APIView):
         annuler_intervention(intervention)
         serializer = InterventionSerializer(intervention)
         return Response(serializer.data, status=200)
+
+
+ 
+class InterventionListView(generics.ListAPIView):
+    serializer_class = InterventionSerializer
+    permission_classes = [EstAdmin]  # seuls l'admin peut voir toutes les interventions
+
+    def get_queryset(self):
+        return Intervention.objects.all()
+
+
+class MesInterventionsView(generics.ListAPIView):
+    serializer_class = InterventionSerializer
+    permission_classes = [IsAuthenticated]  # seul l'agent connecté peut voir ses propres interventions
+
+    def get_queryset(self):
+        return Intervention.objects.filter(agent=self.request.user) # filtrer par l'agent

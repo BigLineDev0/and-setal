@@ -1,29 +1,40 @@
 import requests
 from .models import AnalyseIA
 
+# URL du microservice FastAPI d'analyse d'images
+FASTAPI_URL = "http://localhost:8001/api/ia/analyse"
 
-def appeler_service_ia(url_image, timeout=5):
-    # Mock temporaire — à remplacer par l'appel réel au service FastAPI
-    return {
-        "type_incident": "depot_sauvage",
-        "score_confiance": 0.85,
-        "niveau_urgence": "eleve"
-    }
+
+def appeler_service_ia(incident, timeout=5):
+    # Ouvre le fichier image stocké par Django en mode lecture binaire ('rb')
+    with incident.urlImage.open('rb') as fichier_image:
+        # Prépare le fichier au format attendu par FastAPI : champ 'image', nom, contenu, type MIME
+        fichiers = {'image': (incident.urlImage.name, fichier_image, 'image/jpeg')}
+        
+        # Envoie la requête POST avec le fichier en multipart/form-data
+        reponse = requests.post(FASTAPI_URL, files=fichiers, timeout=timeout)
+        
+        # Lève une exception si le code HTTP n'est pas 200 (ex: 400, 413, 500 gérés côté FastAPI)
+        reponse.raise_for_status()
+        
+        # Convertit la réponse JSON en dictionnaire Python
+        return reponse.json()
 
 
 def calculer_priorite(type_incident, confiance, niveau_urgence):
-    if niveau_urgence == "eleve" and confiance >= 0.7:
+    if niveau_urgence == "eleve":
         return "haute"
-    elif niveau_urgence == "eleve":
+    elif niveau_urgence == "moyen":
         return "moyenne"
-    elif confiance < 0.5:
-        return "a_verifier"
+    elif niveau_urgence == "faible":
+        return "faible"
     return "basse"
 
 
 def declencher_analyse_ia(incident):
     try:
-        resultat = appeler_service_ia(incident.urlImage, timeout=5)
+        # ⚠️ Changement : on passe maintenant 'incident' entier, plus 'incident.urlImage'
+        resultat = appeler_service_ia(incident, timeout=5)
 
         AnalyseIA.objects.create(
             signalement=incident,
@@ -38,7 +49,8 @@ def declencher_analyse_ia(incident):
             resultat['niveau_urgence'],
         )
 
-    except (requests.exceptions.Timeout, requests.exceptions.RequestException):
+    # Ajout de HTTPError pour capter les erreurs renvoyées explicitement par FastAPI (400, 413, 500)
+    except (requests.exceptions.Timeout, requests.exceptions.RequestException, requests.exceptions.HTTPError):
         pass
 
     incident.save()
