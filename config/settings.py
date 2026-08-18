@@ -17,6 +17,7 @@ IA_SERVICE_URL = os.getenv(
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    'UPDATE_LAST_LOGIN': True # permet de mettre à jour le dernier login de l'utilisateur lors de l'utilisation du refresh token
 }
 
 # Quick-start development settings - unsuitable for production
