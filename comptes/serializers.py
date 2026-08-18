@@ -8,9 +8,9 @@ class UtilisateurSerializers(serializers.ModelSerializer):
     class Meta:
         
         model = Utilisateurs
-        fields = ['id', 'first_name', 'last_name', 'telephone', 'email', 'last_login', 'is_active', 'role']
+        fields = ['id','first_name', 'last_name', 'telephone', 'email', 'last_login', 'is_active', 'role']
         # 'role' est exposé mais non modifiable par l'utilisateur via ce serializer
-        read_only_fields = ['role', 'last_login', 'is_active']
+        read_only_fields = ['id', 'role', 'last_login']
 
 
 class InscriptionSerializer(serializers.ModelSerializer):
