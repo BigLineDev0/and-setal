@@ -49,7 +49,7 @@ class IncidentDetailView(generics.RetrieveAPIView):
     serializer_class = IncidentSerializer
 
     def get_queryset(self):
-        return Incident.objects.filter(citoyen=self.request.user)
+        return Incident.objects.all()
 
 
 
