@@ -13,8 +13,8 @@ class IncidentSerializer(serializers.ModelSerializer):
 
 
 
-        def get_type_incident(self, obj):
+    def get_type_incident(self, obj):
 
-            # Récupère le type d'incident associé à l'objet Incident via la relation avec AnalyseIA
-            analyse = obj.analyseia_set.first()  #  first() pour obtenir le premier objet AnalyseIA associé à l'incident ou .get() avec try/except
-            return analyse.type_incident if analyse else None
+        # Récupère le type d'incident associé à l'objet Incident via la relation avec AnalyseIA
+        analyse = obj.analyseia_set.first()  #  first() pour obtenir le premier objet AnalyseIA associé à l'incident ou .get() avec try/except
+        return analyse.type_incident if analyse else None
