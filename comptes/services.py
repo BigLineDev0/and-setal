@@ -4,7 +4,7 @@ from .models import Otp
 def generer_et_envoyer_otp(utilisateur):
     """Génère un code OTP pour un utilisateur et simule son envoi (log console)."""
 
-    # Génère un code aléatoire à 6 chiffres (méthode statique définie sur le modèle)
+    # Génère un code aléatoire à 4 chiffres (méthode statique définie sur le modèle)
     code = Otp.generer_code()
 
     # Enregistre l'OTP en base, lié à l'utilisateur, avec date_creation auto et est_utilise=False par défaut
