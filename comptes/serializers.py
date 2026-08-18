@@ -24,7 +24,6 @@ class InscriptionSerializer(serializers.ModelSerializer):
         '''Sérialise les données d'inscription et gère la création sécurisée du compte.'''
 
         model = Utilisateurs
-       
         fields = ['id', 'first_name', 'last_name', 'password', 'telephone', 'email']
 
     def validate_email(self, value):
@@ -56,7 +55,6 @@ class InscriptionSerializer(serializers.ModelSerializer):
 
 class VerificationOTPSerializer(serializers.Serializer):
     """Valide les données envoyées pour vérifier un code OTP reçu par SMS."""
-
     email = serializers.EmailField()
     code = serializers.CharField(max_length=4, min_length=4)  # code toujours exactement 5 chiffres
 
@@ -73,7 +71,6 @@ class ChangerRoleSerializer(serializers.ModelSerializer):
     ce serializer n'est utilisé que par l'endpoint réservé aux admins (voir views.py),
     jamais par l'utilisateur pour modifier son propre profil.
     """
- 
     class Meta:
         model = Utilisateurs
         fields = ['role']
@@ -82,8 +79,19 @@ class ChangerRoleSerializer(serializers.ModelSerializer):
 class CreationAgentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilisateurs
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'telephone']
-        # pas de password ici : il est généré côté serveur, pas fourni par l'admin
+      # 'username' sera généré à partir de l'email
+        fields = ['id', 'first_name', 'last_name', 'email', 'telephone']
+
+    def create(self, validated_data):
+        """Gère la création automatique du username pour l'agent créé par l'admin."""
+        agent = Utilisateurs(**validated_data)
+        agent.username = validated_data['email']
+        agent.role = 'agent'
+        # Attribution d'un mot de passe aléatoire ou temporaire (à définir dans vos vues si besoin)
+        agent.set_unusable_password() 
+        agent.save()
+        return agent
+
 
 # ---------- Gestion du profil ----------
 
@@ -95,5 +103,6 @@ class MonProfilSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Utilisateurs
-        fields = ['username', 'first_name', 'last_name', 'email', 'role' ,'telephone']
-        read_only_fields = ["role"]
+        # Modification : 'username' est passé en read_only car il ne doit pas être modifié directement
+        fields = ['username', 'first_name', 'last_name', 'email', 'role', 'telephone']
+        read_only_fields = ["role", "username", "email"]
