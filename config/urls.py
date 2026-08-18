@@ -16,6 +16,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/incidents/', include('incident.urls')),
     path('api/interventions/', include('interventions.urls')),
+    path('api/',include('notifications.urls')),
+
 ]
 
 if settings.DEBUG:
