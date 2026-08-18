@@ -8,9 +8,9 @@ class UtilisateurSerializers(serializers.ModelSerializer):
     class Meta:
         
         model = Utilisateurs
-        fields = ['first_name', 'last_name', 'telephone', 'email', 'role']
+        fields = ['first_name', 'last_name', 'telephone', 'email', 'last_login', 'is_active', 'role']
         # 'role' est exposé mais non modifiable par l'utilisateur via ce serializer
-        read_only_fields = ['role']
+        read_only_fields = ['role', 'last_login', 'is_active']
 
 
 class InscriptionSerializer(serializers.ModelSerializer):
@@ -24,7 +24,8 @@ class InscriptionSerializer(serializers.ModelSerializer):
         '''Sérialise les données d'inscription et gère la création sécurisée du compte.'''
 
         model = Utilisateurs
-        fields = ['id', 'first_name', 'last_name', 'password', 'telephone', 'email']
+        fields = ['id', 'first_name', 'last_name', 'password', 'telephone', 'email', 'is_active']
+        read_only_fields = ['is_active']
 
     def validate_email(self, value):
         """Vérifie si l'adresse email n'est pas déjà prise."""
