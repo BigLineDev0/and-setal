@@ -57,7 +57,7 @@ class InscriptionSerializer(serializers.ModelSerializer):
 class VerificationOTPSerializer(serializers.Serializer):
     """Valide les données envoyées pour vérifier un code OTP reçu par SMS."""
     email = serializers.EmailField()
-    code = serializers.CharField(max_length=4, min_length=4)  # code toujours exactement 6 chiffres
+    code = serializers.CharField(max_length=4, min_length=4)  # code toujours exactement 5 chiffres
 
 
 class RenvoiOTPSerializer(serializers.Serializer):
