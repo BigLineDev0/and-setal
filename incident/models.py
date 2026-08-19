@@ -19,6 +19,7 @@ class Incident(models.Model):
     messageVocal = models.FileField(upload_to='audios/', null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    adresse = models.CharField(max_length=255, null=True, blank=True)
     dateCreation = models.DateTimeField(auto_now_add=True)
     dateModification = models.DateTimeField(auto_now=True)
     priorite = models.CharField(max_length=20, null=True, blank=True)
