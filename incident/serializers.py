@@ -5,6 +5,7 @@ from .models import Incident
 
 class IncidentSerializer(serializers.ModelSerializer):
     type_incident = serializers.SerializerMethodField()
+    citoyen = serializers.SerializerMethodField()
     
     class Meta:
         model = Incident
@@ -18,3 +19,13 @@ class IncidentSerializer(serializers.ModelSerializer):
         # Récupère le type d'incident associé à l'objet Incident via la relation avec AnalyseIA
         analyse = obj.analyseia_set.first()  #  first() pour obtenir le premier objet AnalyseIA associé à l'incident ou .get() avec try/except
         return analyse.type_incident if analyse else None
+
+    def get_citoyen(self, obj):
+        if obj.citoyen:
+            return {
+                "id": obj.citoyen.id,
+                "prenom": obj.citoyen.first_name,
+                "nom": obj.citoyen.last_name,
+                "email": obj.citoyen.email,
+            }
+        return None  # signalement anonyme
