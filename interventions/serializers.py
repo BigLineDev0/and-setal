@@ -4,11 +4,11 @@ from .models import Intervention
 
 class InterventionSerializer(serializers.ModelSerializer):
     agent = serializers.SerializerMethodField()
-    signalement = serializers.SerializerMethodField()
+    type_incident = serializers.SerializerMethodField()
 
     class Meta:
         model = Intervention
-        fields = ['id', 'signalement', 'agent', 'statut', 'photo', 'commentaire', 'date_creation', 'date_fin']
+        fields = ['id', 'signalement', 'type_incident', 'agent', 'statut', 'photo', 'commentaire', 'date_creation', 'date_fin']
         read_only_fields = ['id', 'date_creation', 'agent']
 
 
@@ -21,7 +21,7 @@ class InterventionSerializer(serializers.ModelSerializer):
         return None
 
 
-    def get_signalement(self, obj):
+    def get_type_incident(self, obj):
         if obj.signalement:
             # On cherche l'analyse IA liée à cet incident
             analyse = obj.signalement.analyseia_set.first()
